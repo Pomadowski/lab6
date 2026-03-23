@@ -42,6 +42,8 @@ class GeigerCounter : public Sensor {
 		int timeSinceLastMeasurement;
 		int currentTime;
 		double detectionRate;
+		double alarmThreshold;
+		bool alarm;
 	public:
 		void addDetection(){
 			if(sensor_active=true){
@@ -56,6 +58,18 @@ class GeigerCounter : public Sensor {
 			currentTime = UnixTime;
 			detectionCount = 0;
 			}
+		}
+		void setAlarmThreshold(double threshold){
+			alarmThreshold=threshold;
+		}
+		void checkAlert(){
+			if(alarmThreshold < detectionRate){
+				alarm = true;
+			}
+		
+		}
+		void clearAlarm(){
+			alarm = false;
 		}
 	
 	
@@ -162,7 +176,7 @@ int main(){
 		std::this_thread::sleep_for(timespan);
 		unixtime = time(&now);
 		G1.updateReading(unixtime);
-		L1.writeDistance(a,i);
+		L1.writeDistance(i,i);
 		
 		
 		
