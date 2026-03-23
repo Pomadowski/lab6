@@ -176,7 +176,7 @@ int main(){
 		std::this_thread::sleep_for(timespan);
 		unixtime = time(&now);
 		G1.updateReading(unixtime);
-		L1.writeDistance(a,i);
+		L1.writeDistance(i,i);
 		
 		
 		
