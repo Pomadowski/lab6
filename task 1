@@ -1,0 +1,100 @@
+#include <cstdio>
+#include <cstdlib>
+#include <iostream>
+#include <stdio.h>
+#include <ctime>
+#include <chrono>
+#include <thread>
+
+
+class Sensor {
+
+ protected:
+ 	 std::string name; 
+ 	 int sensor_ID;
+ 	 bool sensor_active = false;
+ public: 
+  void setName(std::string n) {
+ 	 name = n; 
+	  }
+  void displayName() { 
+  	std::cout << "Sensor: " << name << std::endl; 
+	  } 
+  void setID(int a){
+  	sensor_ID=a;
+  }
+	int getID(){
+		return sensor_ID;
+	}
+	void enable(){
+		sensor_active = true;
+	}
+	void disable(){
+		sensor_active = false;
+	}
+	  
+	  }; 
+	  
+	  
+class GeigerCounter : public Sensor {
+	private:
+		int detectionCount;
+		int timeSinceLastMeasurement;
+		int currentTime;
+		double detectionRate;
+	public:
+		void addDetection(){
+			if(sensor_active=true){
+			detectionCount++;
+		}
+		}
+		void updateReading(int UnixTime){
+			if(sensor_active=true){
+			timeSinceLastMeasurement=UnixTime-currentTime;
+			detectionRate = detectionCount/timeSinceLastMeasurement;
+			std::cout << "detection rate:" << detectionRate << std::endl;
+			currentTime = UnixTime;
+			detectionCount = 0;
+			}
+		}
+	
+	
+	
+};
+
+
+int main(){
+	time_t now;
+
+	GeigerCounter G1;
+	G1.enable();
+	int a;
+	int unixtime;
+	unixtime = time(&now);
+	G1.updateReading(unixtime);
+	
+	
+	for(int i=0; i<100; i++){
+		a = rand()%1000;
+		for(a; a>0; a--){
+			G1.addDetection();
+		}
+		std::chrono::milliseconds timespan(1000);
+		std::this_thread::sleep_for(timespan);
+		unixtime = time(&now);
+		G1.updateReading(unixtime);
+
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	return 0;
+}
